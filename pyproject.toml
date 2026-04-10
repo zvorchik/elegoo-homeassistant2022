@@ -1,6 +1,6 @@
 [project]
 name = "elegoo_printer"
-version = "2.8.0"
+version = "2.8.0-ha2022.5.5"
 requires-python = ">=3.13"
 description = "Home Assistant Addon for Elegoo Printers"
 dependencies = [
@@ -34,15 +34,14 @@ select = [
 ]
 
 ignore = [
-    "ANN401", # Dynamically typed expressions (typing.Any) are disallowed
-    "D203", # no-blank-line-before-class (incompatible with formatter)
-    "D212", # multi-line-summary-first-line (incompatible with formatter)
-    "COM812", # incompatible with formatter
-    "ISC001", # incompatible with formatter
-    "UP041", # Replace aliased errors with TimeoutError (we intentionally use built-in TimeoutError)
+    "ANN401",
+    "D203",
+    "D212",
+    "COM812",
+    "ISC001",
+    "UP041",
 ]
 
-# Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
 
 [tool.ruff.lint.flake8-pytest-style]

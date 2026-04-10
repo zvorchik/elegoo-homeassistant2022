@@ -18,10 +18,7 @@ from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.entity_registry import (
-    EntityRegistry,
-    async_get,
-)
+from homeassistant.helpers.entity_registry import EntityRegistry, async_get
 from homeassistant.loader import async_get_loaded_integration
 
 from custom_components.elegoo_printer.websocket.client import ElegooPrinterClient
@@ -86,7 +83,7 @@ async def async_setup_entry(
 
     try:
         entry.runtime_data = data
-    except Exception:
+    except AttributeError:
         pass
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = data
@@ -99,7 +96,7 @@ async def async_setup_entry(
             await client.elegoo_stop_mqtt_broker()
             if client.server:
                 await ElegooPrinterServer.release_reference()
-        except Exception as cleanup_error:
+        except Exception as cleanup_error:  # noqa: BLE001
             LOGGER.warning("Error during cleanup after failed setup: %s", cleanup_error)
         raise
 
@@ -107,8 +104,8 @@ async def async_setup_entry(
         hass.async_create_task(
             hass.config_entries.async_forward_entry_setup(entry, platform)
         )
-    entry.async_on_unload(entry.add_update_listener(async_reload_entry))
 
+    entry.async_on_unload(entry.add_update_listener(async_reload_entry))
     return True
 
 
@@ -118,17 +115,23 @@ async def async_unload_entry(
 ) -> bool:
     """Handle removal of an entry."""
     unload_ok = all(
-        await asyncio.gather(*[
-            hass.config_entries.async_forward_entry_unload(entry, platform)
-            for platform in PLATFORMS
-        ])
+        await asyncio.gather(
+            *[
+                hass.config_entries.async_forward_entry_unload(entry, platform)
+                for platform in PLATFORMS
+            ]
+        )
     )
-    runtime_data = getattr(entry, "runtime_data", None) or hass.data.get(DOMAIN, {}).get(entry.entry_id)
+
+    runtime_data = getattr(entry, "runtime_data", None) or hass.data.get(
+        DOMAIN, {}
+    ).get(entry.entry_id)
+
     if unload_ok and runtime_data and (client := runtime_data.api):
         try:
             await asyncio.shield(client.elegoo_disconnect())
-        except (asyncio.CancelledError, ClientError, OSError, RuntimeError) as e:
-            LOGGER.warning("Error disconnecting client: %s", e, exc_info=True)
+        except (asyncio.CancelledError, ClientError, OSError, RuntimeError) as err:
+            LOGGER.warning("Error disconnecting client: %s", err, exc_info=True)
 
         try:
             should_stop = await asyncio.shield(
@@ -136,18 +139,19 @@ async def async_unload_entry(
             )
             if not should_stop:
                 await asyncio.shield(ElegooPrinterServer.release_reference())
-        except (asyncio.CancelledError, OSError, RuntimeError) as e:
+        except (asyncio.CancelledError, OSError, RuntimeError) as err:
             LOGGER.warning(
-                "Error removing printer from proxy server: %s", e, exc_info=True
+                "Error removing printer from proxy server: %s", err, exc_info=True
             )
 
         try:
             await client.elegoo_stop_mqtt_broker()
-        except (OSError, RuntimeError) as e:
-            LOGGER.warning("Error stopping MQTT broker: %s", e, exc_info=True)
+        except (OSError, RuntimeError) as err:
+            LOGGER.warning("Error stopping MQTT broker: %s", err, exc_info=True)
 
     if unload_ok:
         hass.data.get(DOMAIN, {}).pop(entry.entry_id, None)
+
     return unload_ok
 
 
@@ -200,8 +204,8 @@ async def async_migrate_entry(
             else:
                 LOGGER.error("Config migration failed, no printer found")
                 return False
-        except (ConnectionError, IndexError, KeyError) as e:
-            LOGGER.error("Error migrating config entry: %s", e)
+        except (ConnectionError, IndexError, KeyError) as err:
+            LOGGER.error("Error migrating config entry: %s", err)
             return False
 
     if config_entry.version == CONFIG_VERSION_2:
@@ -209,13 +213,13 @@ async def async_migrate_entry(
         entries = entity_registry.entities.get_entries_for_config_entry_id(
             config_entry.entry_id
         )
-        for entry in entries:
+        for entity_entry in entries:
             if (
-                entry.device_class == SensorDeviceClass.DURATION
-                and entry.native_unit_of_measurement == UnitOfTime.SECONDS
+                entity_entry.device_class == SensorDeviceClass.DURATION
+                and entity_entry.native_unit_of_measurement == UnitOfTime.SECONDS
             ):
                 entity_registry.async_update_entity(
-                    entry.entity_id,
+                    entity_entry.entity_id,
                     native_unit_of_measurement=UnitOfTime.MILLISECONDS,
                 )
         hass.config_entries.async_update_entry(config_entry, version=3)
@@ -265,30 +269,30 @@ async def async_migrate_entry(
             entity_entries = er.async_get(
                 hass
             ).entities.get_entries_for_config_entry_id(config_entry.entry_id)
-            for entry in entity_entries:
+            for entity_entry in entity_entries:
                 LOGGER.debug(
                     "MIGRATION CHECK: Comparing with entity unique_id: '%s'",
-                    entry.unique_id,
+                    entity_entry.unique_id,
                 )
-                if entry.domain == "camera":
+                if entity_entry.domain == "camera":
                     LOGGER.debug(
                         "Removing old camera entity '%s' to allow for clean re-creation.",
-                        entry.entity_id,
+                        entity_entry.entity_id,
                     )
-                    entity_registry.async_remove(entry.entity_id)
+                    entity_registry.async_remove(entity_entry.entity_id)
                     continue
 
-                if entry.unique_id.lower().startswith(old_identifier_slug.lower()):
-                    new_unique_id = entry.unique_id.replace(
+                if entity_entry.unique_id.lower().startswith(old_identifier_slug.lower()):
+                    new_unique_id = entity_entry.unique_id.replace(
                         old_identifier_slug, new_identifier, 1
                     )
                     LOGGER.debug(
                         "Migrating entity '%s' to new unique_id: %s",
-                        entry.entity_id,
+                        entity_entry.entity_id,
                         new_unique_id,
                     )
                     entity_registry.async_update_entity(
-                        entry.entity_id, new_unique_id=new_unique_id
+                        entity_entry.entity_id, new_unique_id=new_unique_id
                     )
 
             hass.config_entries.async_update_entry(config_entry, version=4)
@@ -296,9 +300,9 @@ async def async_migrate_entry(
                 "Migration to version 4 successful for printer ID %s", new_identifier
             )
 
-        except (KeyError, ValueError) as e:
+        except (KeyError, ValueError) as err:
             LOGGER.error(
-                "Error migrating config entry to version 4: %s", e, exc_info=True
+                "Error migrating config entry to version 4: %s", err, exc_info=True
             )
             return False
     return True
