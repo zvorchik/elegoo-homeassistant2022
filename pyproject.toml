@@ -1,8 +1,8 @@
 [project]
 name = "elegoo_printer"
-version = "2.8.0-ha2022.5.5"
+version = "2.8.0-ha2022.5.5-minimal"
 requires-python = ">=3.13"
-description = "Home Assistant Addon for Elegoo Printers"
+description = "Minimal Elegoo Printer integration"
 dependencies = [
     "aiomqtt>=2.4.0",
     "colorlog>=6.9.0",
@@ -21,6 +21,7 @@ dev = [
     "ruff>=0.9.10",
     "ty>=0.0.1a21",
 ]
+
 [tool.ruff]
 target-version = "py313"
 exclude = [
@@ -29,9 +30,7 @@ exclude = [
 ]
 
 [tool.ruff.lint]
-select = [
-    "ALL",
-]
+select = ["ALL"]
 
 ignore = [
     "ANN401",
@@ -61,8 +60,6 @@ max-complexity = 25
 "custom_components/elegoo_printer/cc2/tests/*.py" = ["S101", "SLF001", "PLC0415"]
 
 [tool.pytest.ini_options]
-pythonpath = [
-  "."
-]
+pythonpath = ["."]
 testpaths = ["custom_components"]
 norecursedirs = ["scripts"]

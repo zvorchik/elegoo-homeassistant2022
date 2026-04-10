@@ -2,17 +2,17 @@
   "domain": "elegoo_printer",
   "name": "Elegoo Printer",
   "codeowners": [
-    "@danielcherubini"
+    "@zvorchik"
   ],
   "config_flow": true,
   "dependencies": [
     "ffmpeg"
   ],
-  "documentation": "https://github.com/danielcherubini/elegoo-homeassistant",
+  "documentation": "https://github.com/zvorchik/elegoo-homeassistant2022",
   "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/danielcherubini/elegoo-homeassistant/issues",
+  "issue_tracker": "https://github.com/zvorchik/elegoo-homeassistant2022/issues",
   "requirements": [
     "aiomqtt>=2.4.0"
   ],
-  "version": "2.8.0-ha2022.5.5"
+  "version": "2.8.0-ha2022.5.5-minimal"
 }
