@@ -1,18 +1,9 @@
 {
-  "domain": "elegoo_printer",
-  "name": "Elegoo Printer",
-  "codeowners": [
-    "@zvorchik"
-  ],
+  "domain": "elegoo_neptune4plus",
+  "name": "Elegoo Neptune 4 / 4 Plus",
+  "version": "1.2.0",
+  "requirements": [],
+  "codeowners": ["@zvorchik"],
   "config_flow": true,
-  "dependencies": [
-    "ffmpeg"
-  ],
-  "documentation": "https://github.com/zvorchik/elegoo-homeassistant2022",
-  "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/zvorchik/elegoo-homeassistant2022/issues",
-  "requirements": [
-    "aiomqtt>=2.4.0"
-  ],
-  "version": "2.8.0-ha2022.5.5-minimal"
+  "iot_class": "local_polling"
 }

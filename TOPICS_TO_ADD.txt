@@ -1,9 +1,0 @@
-Add these GitHub repository topics in Settings -> General -> Topics:
-
-home-assistant
-hacs
-integration
-elegoo
-3d-printer
-
-HACS validation fails on topics at repository level, not inside the archive.

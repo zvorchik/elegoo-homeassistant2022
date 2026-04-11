@@ -1,7 +1,1 @@
-{
-  "name": "Elegoo Printer",
-  "content_in_root": false,
-  "render_readme": true,
-  "homeassistant": "2022.5.5",
-  "hacs": "2.0.1"
-}
+{"name":"Elegoo Neptune 4 Plus","domains":["elegoo_neptune4plus"],"content_in_root":false}
