@@ -1,1 +1,1 @@
-DOMAIN = "elegoo_neptune4plus"
+DOMAIN = "elegoo_printer"
