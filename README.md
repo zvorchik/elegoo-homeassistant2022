@@ -1,22 +1,21 @@
 
-# Elegoo Neptune 4 Pro – Home Assistant (HA 2022.5.5)
+# Elegoo Neptune 4 Pro – Home Assistant (SDCP / Elegoo API)
 
-Повна робоча інтеграція для керування принтером **Elegoo Neptune 4 Pro** через **Moonraker**.
+✅ **ПРАЦЮЄ НА СТОКОВІЙ ПРОШИВЦІ**
+
+Ця інтеграція використовує **рідний Elegoo API (SDCP)**, без Moonraker.
 
 ## Можливості
-- UI-додавання (вводиш IP принтера)
-- Сенсори: статус, прогрес, температура сопла, температура стола
-- Керування друком: Pause / Resume / Stop
-- Зміна температур (nozzle / bed)
-- Камера (snapshot з Moonraker)
+- Статус друку
+- Прогрес
+- Температура сопла і стола
+- Pause / Resume / Stop
 
 ## Вимоги
+- Elegoo Neptune 4 Pro (стокова прошивка)
 - Home Assistant 2022.5.5+
-- Moonraker доступний на http://IP:7125
 
 ## Встановлення
 1. Скопіюй `custom_components/elegoo_neptune4pro` у `/config/custom_components`
-2. Повний reboot Home Assistant
-3. Settings → Devices & Services → Add Integration → Elegoo Printer
-
-
+2. Перезапусти Home Assistant (повний reboot)
+3. Add Integration → Elegoo Printer

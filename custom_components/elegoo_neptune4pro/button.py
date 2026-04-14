@@ -1,20 +1,20 @@
 
 from homeassistant.components.button import ButtonEntity
-import requests
+from .sdcp import SDCPClient
+
+async def async_setup_entry(hass, entry, async_add_entities):
+    client = SDCPClient(entry.data['host'])
+    async_add_entities([
+        ElegooButton(client, 'Pause', 'pause'),
+        ElegooButton(client, 'Resume', 'resume'),
+        ElegooButton(client, 'Stop', 'stop'),
+    ])
 
 class ElegooButton(ButtonEntity):
-    def __init__(self, host, name, cmd):
+    def __init__(self, client, name, cmd):
+        self.client = client
         self._attr_name = name
-        self.host = host
         self.cmd = cmd
 
     def press(self):
-        requests.post(f"http://{self.host}:7125/printer/print/{self.cmd}")
-
-async def async_setup_entry(hass, entry, async_add_entities):
-    h = entry.data['host']
-    async_add_entities([
-        ElegooButton(h, "Pause Print", "pause"),
-        ElegooButton(h, "Resume Print", "resume"),
-        ElegooButton(h, "Stop Print", "cancel")
-    ])
+        getattr(self.client, self.cmd)()
