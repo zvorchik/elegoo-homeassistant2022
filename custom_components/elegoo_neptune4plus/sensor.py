@@ -19,7 +19,9 @@ class ElegooSensor(SensorEntity):
         self._attr_unique_id = f"{DOMAIN}_{entry.entry_id}_{key}"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, entry.entry_id)},
-            name='Elegoo Printer', manufacturer='Elegoo', model='Neptune 4 Plus'
+            name='Elegoo Printer',
+            manufacturer='Elegoo',
+            model='Neptune 4 Plus'
         )
 
     async def async_update(self):

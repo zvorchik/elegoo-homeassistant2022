@@ -2,7 +2,7 @@ from homeassistant.components.camera import Camera
 import requests
 
 class ElegooCamera(Camera):
-    def __init__(self, host): super().__init__(); self.host = host
+    def __init__(self, host): self.host = host; super().__init__()
     def camera_image(self, **kwargs):
         return requests.get(f"http://{self.host}:8080/?action=snapshot", timeout=5).content
 

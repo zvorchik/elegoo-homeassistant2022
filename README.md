@@ -1,16 +1,16 @@
 
-Elegoo Neptune 4 Plus – SDCP Home Assistant integration
-=====================================================
+Elegoo Neptune 4 Plus – Home Assistant integration (SDCP, no Moonraker)
 
-✅ For **Elegoo Neptune 4 PLUS**
-✅ **NO Moonraker required** (stock firmware)
-✅ Compatible with **Home Assistant 2022.5.5**
+This is a FULL, WORKING base for Elegoo Neptune 4 Plus using stock firmware.
+Home Assistant: tested concept for 2022.5.5 architecture.
 
 Features:
-- Printer device appears in HA
+- Proper device creation
 - Sensors: state, progress, nozzle temp, bed temp
 - Buttons: pause / resume / stop
-- Temperature control: nozzle / bed
-- Camera via MJPEG (port 8080)
+- Temperature control (nozzle + bed)
+- Camera snapshot (MJPEG port 8080)
 
-Protocol: **Elegoo SDCP (UDP 3000)**
+INSTALL:
+Copy custom_components/elegoo_neptune4plus into /config/custom_components
+Restart Home Assistant fully, then add integration "Elegoo Printer".
