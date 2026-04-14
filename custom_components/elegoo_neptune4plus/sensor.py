@@ -1,20 +1,14 @@
-
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.entity import DeviceInfo
 from .const import DOMAIN
 
-SENS = {
-    'state': 'State',
-    'progress': 'Progress',
-    'nozzle': 'Nozzle Temp',
-    'bed': 'Bed Temp',
-}
-
 async def async_setup_entry(hass, entry, async_add_entities):
-    client = hass.data[DOMAIN][entry.entry_id]
+    c = hass.data[DOMAIN][entry.entry_id]
     async_add_entities([
-        ElegooSensor(client, entry, k, name)
-        for k, name in SENS.items()
+        ElegooSensor(c, entry, 'state', 'State'),
+        ElegooSensor(c, entry, 'progress', 'Progress'),
+        ElegooSensor(c, entry, 'nozzle', 'Nozzle Temp'),
+        ElegooSensor(c, entry, 'bed', 'Bed Temp'),
     ], True)
 
 class ElegooSensor(SensorEntity):
@@ -25,11 +19,8 @@ class ElegooSensor(SensorEntity):
         self._attr_unique_id = f"{DOMAIN}_{entry.entry_id}_{key}"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, entry.entry_id)},
-            name="Elegoo Printer",
-            manufacturer="Elegoo",
-            model="Neptune 4 Pro",
+            name='Elegoo Printer', manufacturer='Elegoo', model='Neptune 4 Plus'
         )
 
     async def async_update(self):
-        d = self.client.status()
-        self._attr_native_value = d.get(self.key)
+        self._attr_native_value = self.client.status().get(self.key)

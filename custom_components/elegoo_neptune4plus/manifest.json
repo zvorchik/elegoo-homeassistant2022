@@ -1,6 +1,5 @@
-
 {
-  "domain": "elegoo_neptune4pro",
+  "domain": "elegoo_neptune4plus",
   "name": "Elegoo Printer",
   "version": "2.0.0",
   "config_flow": true,

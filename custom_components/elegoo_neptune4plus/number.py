@@ -1,12 +1,11 @@
-
 from homeassistant.components.number import NumberEntity
 from .const import DOMAIN
 
 async def async_setup_entry(hass, entry, async_add_entities):
     c = hass.data[DOMAIN][entry.entry_id]
     async_add_entities([
-        TempNumber(c, "Nozzle Temp", "nozzle", 0, 300),
-        TempNumber(c, "Bed Temp", "bed", 0, 120),
+        TempNumber(c, 'Nozzle Temp', 'nozzle', 0, 350),
+        TempNumber(c, 'Bed Temp', 'bed', 0, 120),
     ])
 
 class TempNumber(NumberEntity):
@@ -16,6 +15,4 @@ class TempNumber(NumberEntity):
         self._attr_name = name
         self._attr_min_value = minv
         self._attr_max_value = maxv
-
-    def set_native_value(self, value):
-        self.client.set_temp(self.tool, int(value))
+    def set_native_value(self, value): self.client.set_temp(self.tool, int(value))

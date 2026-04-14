@@ -1,5 +1,3 @@
-
-# Minimal SDCP client (UDP)
 import socket, json
 
 class SDCPClient:
@@ -14,11 +12,8 @@ class SDCPClient:
         data, _ = s.recvfrom(8192)
         return json.loads(data.decode())
 
-    def status(self):
-        return self._send({"cmd": "status"})
-
-    def pause(self): self._send({"cmd": "pause"})
-    def resume(self): self._send({"cmd": "resume"})
-    def stop(self): self._send({"cmd": "stop"})
-    def set_temp(self, tool, val):
-        self._send({"cmd": "set_temp", "tool": tool, "value": val})
+    def status(self): return self._send({'cmd': 'status'})
+    def pause(self): self._send({'cmd': 'pause'})
+    def resume(self): self._send({'cmd': 'resume'})
+    def stop(self): self._send({'cmd': 'stop'})
+    def set_temp(self, tool, val): self._send({'cmd': 'set_temp', 'tool': tool, 'value': val})
