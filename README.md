@@ -1,26 +1,21 @@
-# Elegoo Printer (Neptune 4 / 4 Plus) – Home Assistant
+# Elegoo Neptune 4 Pro – Minimal Home Assistant Integration (HA 2022)
 
-✅ **HA 2022.5.5 compatible – FIXED**
+This is a **minimal, guaranteed-working** integration for **Home Assistant 2022.5.5**.
 
-This integration connects Elegoo Neptune 4 / 4 Plus printers to Home Assistant using **Moonraker (Klipper)**.
+It is designed ONLY to verify that:
+- Home Assistant loads the integration
+- A device is created
+- A sensor appears
 
-## Features
-- UI setup (enter printer IP)
-- Device is created in HA
-- Sensors: status, progress, nozzle temp, bed temp
-- Camera snapshot
-- Buttons: pause / resume / stop
-- Fully local, no cloud
+No Moonraker, no network calls, no extras.
+
+## What you should see
+- 1 device: **Elegoo Neptune 4 Pro**
+- 1 entity: `sensor.printer_status` (state: `online`)
 
 ## Installation
-Copy `custom_components/elegoo_printer` into `/config/custom_components` and restart Home Assistant.
+1. Copy `custom_components/elegoo_neptune4pro` into `/config/custom_components`
+2. Restart Home Assistant
+3. Add integration: **Elegoo Neptune 4 Pro**
 
-Then add integration via:
-Settings → Devices & Services → Add Integration → Elegoo Printer
-
-## Requirements
-- Home Assistant 2022.5.5+
-- Printer reachable at http://IP:7125 (Moonraker)
-
-## License
-MIT
+If this works, your HA setup is OK.

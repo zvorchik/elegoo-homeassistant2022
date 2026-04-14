@@ -1,1 +1,0 @@
-DOMAIN = "elegoo_printer"
