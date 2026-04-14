@@ -1,19 +1,19 @@
 
 from homeassistant.components.button import ButtonEntity
-from .sdcp import SDCPClient
+from .const import DOMAIN
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    client = SDCPClient(entry.data['host'])
+    c = hass.data[DOMAIN][entry.entry_id]
     async_add_entities([
-        ElegooButton(client, 'Pause', 'pause'),
-        ElegooButton(client, 'Resume', 'resume'),
-        ElegooButton(client, 'Stop', 'stop'),
+        ActionButton(c, 'Pause', 'pause'),
+        ActionButton(c, 'Resume', 'resume'),
+        ActionButton(c, 'Stop', 'stop'),
     ])
 
-class ElegooButton(ButtonEntity):
+class ActionButton(ButtonEntity):
     def __init__(self, client, name, cmd):
-        self.client = client
         self._attr_name = name
+        self.client = client
         self.cmd = cmd
 
     def press(self):

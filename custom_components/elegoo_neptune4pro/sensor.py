@@ -1,22 +1,35 @@
 
 from homeassistant.components.sensor import SensorEntity
-from .sdcp import SDCPClient
+from homeassistant.helpers.entity import DeviceInfo
+from .const import DOMAIN
+
+SENS = {
+    'state': 'State',
+    'progress': 'Progress',
+    'nozzle': 'Nozzle Temp',
+    'bed': 'Bed Temp',
+}
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    client = SDCPClient(entry.data['host'])
+    client = hass.data[DOMAIN][entry.entry_id]
     async_add_entities([
-        ElegooSensor(client, 'state'),
-        ElegooSensor(client, 'progress'),
-        ElegooSensor(client, 'nozzle'),
-        ElegooSensor(client, 'bed'),
+        ElegooSensor(client, entry, k, name)
+        for k, name in SENS.items()
     ], True)
 
 class ElegooSensor(SensorEntity):
-    def __init__(self, client, kind):
+    def __init__(self, client, entry, key, name):
         self.client = client
-        self.kind = kind
-        self._attr_name = f"Elegoo {kind}"
+        self.key = key
+        self._attr_name = name
+        self._attr_unique_id = f"{DOMAIN}_{entry.entry_id}_{key}"
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, entry.entry_id)},
+            name="Elegoo Printer",
+            manufacturer="Elegoo",
+            model="Neptune 4 Pro",
+        )
 
     async def async_update(self):
-        data = self.client.status()
-        self._attr_native_value = data.get(self.kind)
+        d = self.client.status()
+        self._attr_native_value = d.get(self.key)

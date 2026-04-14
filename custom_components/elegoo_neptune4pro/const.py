@@ -1,2 +1,2 @@
 DOMAIN = 'elegoo_neptune4pro'
-PORT = 3000
+SDCP_PORT = 3000
