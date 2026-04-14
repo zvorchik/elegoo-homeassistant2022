@@ -1,25 +1,29 @@
+
+import aiohttp
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.entity import DeviceInfo
+from .const import DOMAIN
+
+SENSORS = {
+    "state": ("Print State", lambda d: d['print_stats']['state']),
+    "progress": ("Progress %", lambda d: round(d['display_status']['progress'] * 100, 1)),
+    "nozzle": ("Nozzle Temp", lambda d: d['extruder']['temperature']),
+    "bed": ("Bed Temp", lambda d: d['heater_bed']['temperature']),
+}
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    async_add_entities([PrinterStatusSensor(entry.data['host'])])
+    async_add_entities([ElegooSensor(entry.data['host'], k, v[0], v[1]) for k, v in SENSORS.items()], True)
 
-class PrinterStatusSensor(SensorEntity):
-    def __init__(self, host):
-        self._attr_name = "Printer Status"
-        self._attr_unique_id = f"elegoo_neptune4pro_status_{host}"
-        self._state = "online"
+class ElegooSensor(SensorEntity):
+    def __init__(self, host, key, name, fn):
         self.host = host
+        self._fn = fn
+        self._attr_name = name
+        self._attr_unique_id = f"elegoo_{key}_{host}"
+        self._attr_device_info = DeviceInfo(identifiers={(DOMAIN, host)}, name="Elegoo Printer", manufacturer="Elegoo", model="Neptune 4 Pro")
 
-    @property
-    def device_info(self):
-        return DeviceInfo(
-            identifiers={("elegoo_neptune4pro", self.host)},
-            name="Elegoo Neptune 4 Pro",
-            manufacturer="Elegoo",
-            model="Neptune 4 Pro",
-        )
-
-    @property
-    def native_value(self):
-        return self._state
+    async def async_update(self):
+        async with aiohttp.ClientSession() as s:
+            async with s.get(f"http://{self.host}:7125/printer/objects/query?print_stats&display_status&extruder&heater_bed") as r:
+                js = await r.json()
+                self._attr_native_value = self._fn(js['result']['status'])

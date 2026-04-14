@@ -1,21 +1,22 @@
-# Elegoo Neptune 4 Pro – Minimal Home Assistant Integration (HA 2022)
 
-This is a **minimal, guaranteed-working** integration for **Home Assistant 2022.5.5**.
+# Elegoo Neptune 4 Pro – Home Assistant (HA 2022.5.5)
 
-It is designed ONLY to verify that:
-- Home Assistant loads the integration
-- A device is created
-- A sensor appears
+Повна робоча інтеграція для керування принтером **Elegoo Neptune 4 Pro** через **Moonraker**.
 
-No Moonraker, no network calls, no extras.
+## Можливості
+- UI-додавання (вводиш IP принтера)
+- Сенсори: статус, прогрес, температура сопла, температура стола
+- Керування друком: Pause / Resume / Stop
+- Зміна температур (nozzle / bed)
+- Камера (snapshot з Moonraker)
 
-## What you should see
-- 1 device: **Elegoo Neptune 4 Pro**
-- 1 entity: `sensor.printer_status` (state: `online`)
+## Вимоги
+- Home Assistant 2022.5.5+
+- Moonraker доступний на http://IP:7125
 
-## Installation
-1. Copy `custom_components/elegoo_neptune4pro` into `/config/custom_components`
-2. Restart Home Assistant
-3. Add integration: **Elegoo Neptune 4 Pro**
+## Встановлення
+1. Скопіюй `custom_components/elegoo_neptune4pro` у `/config/custom_components`
+2. Повний reboot Home Assistant
+3. Settings → Devices & Services → Add Integration → Elegoo Printer
 
-If this works, your HA setup is OK.
+

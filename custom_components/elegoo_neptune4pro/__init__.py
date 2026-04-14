@@ -1,8 +1,12 @@
+
 from .const import DOMAIN
 
 async def async_setup_entry(hass, entry):
     await hass.config_entries.async_forward_entry_setup(entry, "sensor")
+    await hass.config_entries.async_forward_entry_setup(entry, "camera")
+    await hass.config_entries.async_forward_entry_setup(entry, "button")
+    await hass.config_entries.async_forward_entry_setup(entry, "number")
     return True
 
 async def async_unload_entry(hass, entry):
-    return await hass.config_entries.async_forward_entry_unload(entry, "sensor")
+    return True
