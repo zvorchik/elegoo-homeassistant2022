@@ -1,7 +1,8 @@
+
 {
-  "domain": "elegoo_neptune4plus",
+  "domain": "elegoo_printer",
   "name": "Elegoo Printer",
-  "version": "1.0.0",
+  "version": "1.0.0-ha2022-led",
   "config_flow": true,
   "iot_class": "local_polling"
 }
